@@ -1,4 +1,139 @@
-@keyframes spin { to { transform: rotate(360deg); } }
-* { box-sizing: border-box; }
-body { margin: 0; padding: 0; background: #f9fafb; }
-input:focus { outline: 2px solid #7c3aed; outline-offset: 1px; border-color: #7c3aed !important; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fillBar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--target-width);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes mercuryFill {
+  from {
+    height: 0%;
+  }
+  to {
+    height: var(--conf-height);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --navy: #0f1629;
+  --navy2: #1a2540;
+  --navy3: #1e2a45;
+  --navy4: #253352;
+  --saffron: #ff9500;
+  --saffron2: #ffb340;
+  --cream: #f5f0e8;
+  --cream2: #e8e2d8;
+  --slate: #8a9bbe;
+  --slate2: #5a6b8a;
+  --green: #22c55e;
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --purple: #a78bfa;
+  --font: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+html,
+body {
+  background: var(--navy);
+  color: var(--cream);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+input,
+button,
+textarea {
+  font-family: var(--font);
+}
+
+input:focus {
+  outline: 2px solid var(--saffron);
+  outline-offset: 2px;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--navy2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--navy4);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--slate2);
+}
+
+/* Text Selection */
+::selection {
+  background: var(--saffron);
+  color: var(--navy);
+}
