@@ -344,7 +344,13 @@ export default function ExamAgent() {
           raw.final_verdict?.single_best_topic_to_master  ? "Best topic: "  + raw.final_verdict.single_best_topic_to_master  : null,
           raw.final_verdict?.best_unit_for_maximum_marks  ? "Best unit: "   + raw.final_verdict.best_unit_for_maximum_marks  : null,
         ].filter(Boolean).join("\n\n") || raw.revision_notes || "",
-        viva_questions: raw.answer_writing_intelligence?.flatMap(a => (a.key_definitions || []).map(d => `${a.topic}: ${d}`)) || raw.viva_questions || [],
+        viva_questions: Array.isArray(raw.answer_writing_intelligence) 
+        ? raw.answer_writing_intelligence.flatMap(a => 
+            (a.key_definitions || []).map(d => `${a.topic}: ${d}`))
+        : [
+            ...(((raw as unknown) as {answer_writing_intelligence?: {subject_specific_tips?: string[]; general_tips?: string[]; keywords_to_use?: string[]}}).answer_writing_intelligence?.subject_specific_tips || []),
+            ...(((raw as unknown) as {answer_writing_intelligence?: {general_tips?: string[]}}).answer_writing_intelligence?.general_tips || []),
+          ],
       };
       stopSteps(); setResult(data); setActiveView("topics");
     } catch (err: unknown) {
@@ -469,7 +475,7 @@ export default function ExamAgent() {
   // ── Results Layout ────────────────────────────────────────────────────────
   const plan: PlanItem[] = result?.revision_plans?.[activePlan] || result?.study_plan || result?.schedule || result?.plan || [];
   const notes = result?.revision_notes || result?.notes || result?.summary || "";
-  const viva: VivaItem[] = result?.viva_questions || result?.answer_writing_intelligence?.flatMap(a => (a.key_definitions || []).map(d => `${a.topic}: ${d}`)) || result?.viva || [];
+const viva: VivaItem[] = result?.viva_questions || result?.viva || [];
 
   return (
     <div style={{ display:"flex", minHeight:"100vh", position:"relative" }}>
@@ -725,7 +731,10 @@ export default function ExamAgent() {
             <SectionHeader icon="✍️" title="Answer Writing Guide" subtitle="Exactly what examiners want to see in your answers" />
             {(!result?.answer_writing_intelligence || result.answer_writing_intelligence.length === 0)
               ? <p style={{ color:"var(--slate)" }}>No answer guide in response.</p>
-              : result.answer_writing_intelligence.map((a, i) => (
+              : (Array.isArray(result.answer_writing_intelligence)
+              ? result.answer_writing_intelligence 
+              : []
+            ).map((a, i) => (
                 <div key={i} style={{ background:"var(--navy2)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:16, padding:"1.5rem", marginBottom:14, animation:`fadeUp 0.3s ease ${i*0.05}s both` }}>
                   <div style={{ fontSize:16, fontWeight:700, color:"var(--cream)", marginBottom:"1rem", display:"flex", alignItems:"center", gap:8 }}>
                     <span style={{ width:28, height:28, borderRadius:"50%", background:"rgba(255,149,0,0.15)", color:"var(--saffron)", fontSize:12, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{i+1}</span>
